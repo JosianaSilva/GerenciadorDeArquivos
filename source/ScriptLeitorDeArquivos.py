@@ -9,6 +9,6 @@ import os
 # for f in os.listdir():
 #     print(f)
 
-def get_files_in_directory(path_directory: str) -> list[str]:
+def get_files_in_directory(path_directory: str = os.getcwd()) -> list[str]:
     os.chdir(path_directory)
     return [obj.name for obj in os.scandir() if obj.is_file()]
