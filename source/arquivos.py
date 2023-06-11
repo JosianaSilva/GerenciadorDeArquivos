@@ -13,7 +13,12 @@ from ScriptLeitorDeArquivos import get_files_in_directory
 
 def display_file_info(file_name: str, directory_path: str = os.getcwd()) -> None:
     assert file_name in get_files_in_directory(directory_path), f"O arquivo {file_name} não foi encontrado no diretório!"
-    file_path = os.path.join(directory_path)
+    
+    if directory_path:
+        os.chdir(directory_path)
+        file_path = os.path.abspath(os.path.join(directory_path, file_name))
+    else:
+        file_path = os.path.abspath(file_name)
     try:
         file_stat = os.stat(file_path)
 
@@ -65,7 +70,9 @@ def change_owner(file_name: str, owner: str, directory_path: str = os.getcwd()) 
     
     if directory_path:
         os.chdir(directory_path)
-    file_path = os.path.abspath(file_name)
+        file_path = os.path.abspath(os.path.join(directory_path, file_name))
+    else:
+        file_path = os.path.abspath(file_name)
     try:
 
         if os.access(file_path, os.W_OK):
@@ -84,7 +91,9 @@ def change_group(file_name: str, group: str, directory_path: str = os.getcwd()) 
     
     if directory_path:
         os.chdir(directory_path)
-    file_path = os.path.abspath(file_name)
+        file_path = os.path.abspath(os.path.join(directory_path, file_name))
+    else:
+        file_path = os.path.abspath(file_name)
     
     try:
         gid = grp.getgrnam(group).gr_gid
@@ -98,18 +107,56 @@ def change_group(file_name: str, group: str, directory_path: str = os.getcwd()) 
         print(f"O grupo {group} não foi encontrado.")
 
 
-def change_permissions(file_name: str, permissions: int, directory_path: str = os.getcwd()) -> None:
+def change_permissions(file_name: str, permissions: str, directory_path: str = os.getcwd()) -> None:
     assert file_name in get_files_in_directory(directory_path), f"O arquivo {file_name} não foi encontrado no diretório!"
-    
     if directory_path:
         os.chdir(directory_path)
-        file_path = os.path.join(file_name, directory_path)
-    try:
-        os.chmod(file_path, permissions)
-        print(
-            f"As permissões do arquivo {file_name} foram alteradas para {permissions:o}.")
-    except FileNotFoundError:
-        print(f"O arquivo {file_path} não foi encontrado.")
+        file_path = os.path.abspath(os.path.join(directory_path, file_name))
+    else:
+        file_path = os.path.abspath(file_name)
+
+    if len(permissions) < 4:
+        permissions = int(permissions, 8)
+
+    if os.path.isfile(file_path):
+        try:
+            if isinstance(permissions, str):
+                mode = 0
+                for p in permissions[:3]:
+                    # Permissões do proprietário
+                    if "r" == p:
+                        mode |= stat.S_IRUSR
+                    if "w" == p:
+                        mode |= stat.S_IWUSR 
+                    if "x" == p:
+                        mode |= stat.S_IXUSR 
+                for p in permissions[3:6]:
+                    # Permissões do grupo
+                    if "r" == p:
+                        mode |= stat.S_IRGRP
+                    if "w" == p:
+                        mode |= stat.S_IWGRP 
+                    if "x" == p:
+                        mode |= stat.S_IXGRP
+                for p in permissions[6:]:
+                    # Permissões dos outros
+                    if "r" == p:
+                        mode |= stat.S_IROTH
+                    if "w" == p:
+                        mode |= stat.S_IWOTH 
+                    if "x" == p:
+                        mode |= stat.S_IXOTH 
+            elif isinstance(permissions, int):
+                mode = permissions
+            else:
+                raise ValueError("As permissões devem ser fornecidas como uma string ou um número inteiro.")
+            
+            os.chmod(file_path, mode)
+            print(f"As permissões do arquivo {file_name} foram alteradas para {permissions}.")
+        except FileNotFoundError:
+            print(f"O arquivo {file_path} não foi encontrado.")
+    else:
+        print(f"O arquivo {file_name} não foi encontrado no diretório {directory_path}.")
 
 def ask_root_password() -> bool:
     password = getpass.getpass("Digite a senha de administrador (root): ")
@@ -150,6 +197,7 @@ def change_group_with_root(file_path: str, group: str) -> None:
 
 # Exemplo de uso:
 # change_owner("menu.txt", "josianasouzasilva")
-# change_group("menu.txt", "josianasouzasilva")
-# display_file_info("menu.txt")
-change_permissions("menu.txt", 755)
+# change_group("menu.txt", "josianasouzasilva", "/home/josianasouzasilva/Documentos/Sistemas de Informação/4º/SO/atividades/GerenciadorDeArquivos/source/")
+# change_permissions("menu.txt", "766")
+# change_permissions("menu.txt", "-rwxrw-rw-")
+display_file_info("menu.txt")
