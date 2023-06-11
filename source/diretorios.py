@@ -4,7 +4,6 @@ from typing import List
 
 # funções relacionadas a dietórios
 
-
 def get_user_directory():
     home_dir = str(Path.home())
     return home_dir
@@ -49,7 +48,7 @@ def list_all(directory_path: str) -> None:
                 for c in content_directory:
                     path = os.path.join(directory_path, c)
                     if os.path.isdir(path):
-                        print(Fore.BLUE + "/" + c  + Style.RESET_ALL, end=" ")
+                        print(Fore.BLUE + c + "/" + Style.RESET_ALL, end=" ")
                     else:
                         print(Fore.MAGENTA + c + Style.RESET_ALL, end=" ")
                 print()
