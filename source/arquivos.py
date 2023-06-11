@@ -1,0 +1,1 @@
+# funções relacionadas a arquivos
