@@ -1,5 +1,3 @@
-# funções relacionadas a arquivos
-
 import os
 import stat
 import pwd
@@ -10,6 +8,21 @@ import getpass
 import subprocess
 from ScriptLeitorDeArquivos import get_files_in_directory
 
+# funções relacionadas a arquivos no geral
+
+
+def get_owner(path):
+    file_stat = os.stat(path)
+    uid = file_stat.st_uid
+    return pwd.getpwuid(uid).pw_name
+    
+def get_group(path):
+    file_stat = os.stat(path)
+    gid = file_stat.st_gid
+    return grp.getgrgid(gid).gr_name
+
+def get_permissions(path):
+    return stat.filemode(os.stat(path).st_mode)
 
 def display_file_info(file_name: str, directory_path: str = os.getcwd()) -> None:
     assert file_name in get_files_in_directory(directory_path), f"O arquivo {file_name} não foi encontrado no diretório!"
@@ -195,9 +208,10 @@ def change_group_with_root(file_path: str, group: str) -> None:
         print(f"O grupo {group} não foi encontrado.")
 
 
-# Exemplo de uso:
-# change_owner("menu.txt", "josianasouzasilva")
-# change_group("menu.txt", "josianasouzasilva", "/home/josianasouzasilva/Documentos/Sistemas de Informação/4º/SO/atividades/GerenciadorDeArquivos/source/")
-# change_permissions("menu.txt", "766")
-# change_permissions("menu.txt", "-rwxrw-rw-")
-display_file_info("menu.txt")
+if __name__ == "__main__":  
+    # Exemplo de uso:
+    # change_owner("menu.txt", "josianasouzasilva")
+    # change_group("menu.txt", "josianasouzasilva", "/home/josianasouzasilva/Documentos/Sistemas de Informação/4º/SO/atividades/GerenciadorDeArquivos/source/")
+    # change_permissions("menu.txt", "766")
+    # change_permissions("menu.txt", "-rwxrw-rw-")
+    print(get_permissions("/home/josianasouzasilva/exemplo.txt"))
