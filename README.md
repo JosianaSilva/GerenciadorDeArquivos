@@ -1,6 +1,6 @@
-# GerenciadorDeArquivos
+# 📂 GerenciadorDeArquivos
 
-## Estrutura no terminal
+## >_ Estrutura no terminal
 O objetivo deste projeto é criar um gerenciador de arquivos simples usando python, com as seguintes características:
 
 1. Alterar o diretório de trabalho;
@@ -23,8 +23,12 @@ O objetivo deste projeto é criar um gerenciador de arquivos simples usando pyth
 - Criação de links simbólicos (ou atalhos). 
 ---
 
-## Como executar
-Tendo como diretório base a raíz deste projeto, siga as instruções para executá-lo localmente.
+## 💻 Como executar
+Aqui está como executá-lo:
+
+1. Clone o repositório em sua máquina local.
+2. Abra o terminal e navegue até o diretório do projeto.
+3. Siga as próximas instruções, para executar com o python ou com docker.
 
 
 ### Usando Python
@@ -43,3 +47,8 @@ Comando para rodar o container:
 docker run -it --rm  --name <substitua pelo nome do container> <substitua pelo nome da imagem>
 ~~~
 
+---
+## 👥 Equipe
+- [Francisco Humberto Tavares Sampaio](https://github.com/Humbert010)
+- [João Victor Cordeiro de Norões](https://github.com/jvictor-cordeiro)
+- [Josiana Francisca de Souza Silva](https://github.com/JosianaSilva/)
